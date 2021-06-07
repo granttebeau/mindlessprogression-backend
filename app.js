@@ -47,7 +47,17 @@ io.on("connection", (socket) => {
       let number = Math.floor(Math.random() * 2);
       let id = !!number ? game.playerTwo : socket.id;
       let turns = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+      // let turns = ['3']
       io.to(game.room).emit("game started", {id: id, turns: turns});
+    })
+
+    socket.on("restart game", game => {
+      console.log(game);
+      let number = Math.floor(Math.random() * 2);
+      let id = !!number ? game.playerTwo : socket.id;
+      let turns = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+      // let turns = ['3']
+      io.to(game.room).emit("game restarted", {id: id, turns: turns});
     })
 
     socket.on("your turn", round => {
@@ -69,20 +79,19 @@ io.on("connection", (socket) => {
 
     socket.on("next round", game => {
       
-      // 10s 8s 4h Jo 3h 5d 6d 2h
       let deck = [
         { suit: 'H', number: 'A' },
-        { suit: 'S', number: '8' },
-        { suit: 'H', number: '2' },
         { suit: 'H', number: '4' },
         { suit: 'S', number: '8' },
-        { suit: 'Jo', number: 'B' },
-        { suit: 'H', number: '4' },
         { suit: 'H', number: '3' },
-        { suit: 'D', number: '7' },
+        { suit: 'H', number: '2' },
         { suit: 'D', number: '5' },
-        { suit: 'H', number: '5' },
+        { suit: 'D', number: '7' },
+        { suit: 'Jo', number: 'B' },
         { suit: 'D', number: '6' },
+        { suit: 'D', number: '7' },
+        { suit: 'H', number: '4' },
+        { suit: 'H', number: '5' },
         { suit: 'H', number: '7' },
         { suit: 'H', number: '2' },
         { suit: 'H', number: '6' },
