@@ -5,6 +5,7 @@ const socketIo = require("socket.io");
 const port = process.env.PORT || 8000;
 
 const app = express();
+app.locals.currentUsers = [];
 
 const server = http.createServer(app);
 
@@ -14,8 +15,13 @@ const io = socketIo(server, {
     },
   });
 
+app.get('/users', (req, res) => {
+  res.send(app.locals.currentUsers);
+})
+
 io.on("connection", (socket) => {
     console.log("New client connected");
+    // TO DO: need to update the currentUsers list once the user is disconnected 
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
@@ -23,6 +29,8 @@ io.on("connection", (socket) => {
 
     socket.on('new user', (usr) => {
         socket['name'] = usr.name;
+        app.locals.currentUsers.push(usr.name);
+        
         let users = [];
         for (let [key, val] of io.sockets.sockets) {
           if (val.rooms.size === 1) {
@@ -84,23 +92,30 @@ io.on("connection", (socket) => {
 
       if (environment === 'dev') {
         deck = [
-          { suit: 'H', number: 'A' },
-          { suit: 'H', number: '4' },
-          { suit: 'S', number: '8' },
-          { suit: 'H', number: '4' },
-          { suit: 'H', number: '3' },
-          { suit: 'H', number: '4' },
-          { suit: 'H', number: '2' },
-          { suit: 'C', number: '4' },
-          { suit: 'D', number: '5' },
-          { suit: 'C', number: '5' },
-          { suit: 'D', number: '7' },
-          { suit: 'Jo', number: 'B' },
-          { suit: 'C', number: '6' },
-          { suit: 'D', number: '6' },
-          { suit: 'D', number: '7' },
-          { suit: 'H', number: '4' },
           { suit: 'H', number: '5' },
+          { suit: 'S', number: 'A' },
+
+          { suit: 'S', number: '8' },
+          { suit: 'H', number: 'A' },
+
+          { suit: 'H', number: '3' },
+          { suit: 'C', number: '2' },
+
+          { suit: 'H', number: '3' },
+          { suit: 'D', number: '2' },
+
+          { suit: 'D', number: '5' },
+          { suit: 'H', number: '3' },
+
+          { suit: 'D', number: '7' },
+          { suit: 'S', number: '5' },
+
+          { suit: 'C', number: '3' },
+          { suit: 'H', number: '5' },
+
+          { suit: 'D', number: '7' },
+          { suit: 'H', number: '5' },
+          { suit: 'H', number: '8' },
           { suit: 'H', number: '7' },
           { suit: 'H', number: '2' },
           { suit: 'H', number: '6' },
