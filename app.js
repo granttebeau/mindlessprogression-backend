@@ -22,10 +22,9 @@ app.get('/api/users', (req, res) => {
 })
 
 io.on("connection", (socket) => {
-    console.log("New client connected");
-    // TO DO: need to update the currentUsers list once the user is disconnected 
+
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        app.locals.currentUsers = app.locals.currentUsers.filter(val => val !== socket.name);
     });
 
 
