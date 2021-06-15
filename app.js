@@ -25,8 +25,13 @@ io.on("connection", (socket) => {
 
     socket.on('disconnect', () => {
         app.locals.currentUsers = app.locals.currentUsers.filter(val => val !== socket.name);
+        let room = Array.from(socket.adapter.rooms.keys())[1];
+        io.to(room).emit("player left");
     });
 
+    socket.on('player left', (game) => {
+      console.log(game);
+    })
 
     socket.on('new user', (usr) => {
         socket['name'] = usr.name;
@@ -56,12 +61,11 @@ io.on("connection", (socket) => {
       let number = Math.floor(Math.random() * 2);
       let id = !!number ? game.playerTwo : socket.id;
       let turns = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-      // let turns = ['3', '4']
+      // let turns = ['3']
       io.to(game.room).emit("game started", {id: id, turns: turns});
     })
 
     socket.on("restart game", game => {
-      console.log(game);
       let number = Math.floor(Math.random() * 2);
       let id = !!number ? game.playerTwo : socket.id;
       let turns = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
