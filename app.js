@@ -1,10 +1,12 @@
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
+const cors = require('cors')
 
 const port = process.env.PORT || 8000;
 
 const app = express();
+app.use(cors());
 app.locals.currentUsers = [];
 
 const server = http.createServer(app);
@@ -15,7 +17,7 @@ const io = socketIo(server, {
     },
   });
 
-app.get('/users', (req, res) => {
+app.get('/api/users', (req, res) => {
   res.send(app.locals.currentUsers);
 })
 
